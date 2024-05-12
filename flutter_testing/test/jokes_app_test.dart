@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-
-import '../lib/jokes_app.dart';
-import '../lib/screens/home_screen.dart';
+import 'package:flutter_testing/jokes_app.dart';
+import 'package:flutter_testing/screens/home_screen.dart';
 
 void main() {
   testWidgets("JokesApp shows HomeScreen at start.", (tester) async {
