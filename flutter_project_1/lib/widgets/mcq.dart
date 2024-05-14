@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_project_1/models/answer.dart';
 import 'package:flutter_project_1/models/quiz.dart';
 import 'package:flutter_project_1/models/statistics.dart';
+import 'package:flutter_project_1/models/topic.dart';
+import 'package:flutter_project_1/providers/generic_provider.dart';
 import 'package:flutter_project_1/providers/quiz_provider.dart';
 import 'package:flutter_project_1/providers/statistics_provider.dart';
 import 'package:flutter_project_1/providers/topic_provider.dart';
+import 'package:flutter_project_1/providers/topics_provider.dart';
 import 'package:flutter_project_1/services/quiz_api.dart';
+import 'package:flutter_project_1/util/handlers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MCQForm extends ConsumerStatefulWidget {
@@ -17,29 +20,57 @@ class MCQForm extends ConsumerStatefulWidget {
 
 class _MCQState extends ConsumerState<MCQForm> {
   List<String> wrongAnswers = [];
-  String correctAnswer = "49";
+  String correctAnswer = "";
   bool isCorrect = false;
 
   _resetStates() {
     setState(() {
       isCorrect = false;
+      correctAnswer = "";
       wrongAnswers = [];
     });
   }
 
-  Future<void> _loadAnswer(Quiz quiz) async {
-    final quizApi = QuizApi();
-    final Answer response = await quizApi.fetchAnswer(quiz.answerPostPath);
-    setState(() {
-      correctAnswer = response.answer;
-    });
+  showSnackbar(bool ansIsCorrect, String text) {
+    final snackBar = SnackBar(
+      dismissDirection: DismissDirection.up,
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      margin: EdgeInsets.only(
+          bottom: MediaQuery.of(context).size.height - 170,
+          left: 10,
+          right: 10),
+      showCloseIcon: true,
+      content: Text(
+        text,
+        style: const TextStyle(color: Colors.white),
+        textAlign: TextAlign.center,
+      ),
+      backgroundColor:
+          ansIsCorrect ? Colors.green.shade700 : Colors.red.shade700,
+      closeIconColor: Colors.white,
+    );
+
+    // Find the ScaffoldMessenger in the widget tree
+    // and use it to show a SnackBar.
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   Future<void> _loadNextQuestion() async {
     final quizNotifier = ref.watch(quizNotifierProvider);
-    final topic = ref.watch(topicProvider);
-    final Quiz quiz = await quizNotifier.updateQuiz(topic?.questionPath);
-    await _loadAnswer(quiz);
+    final generic = ref.watch(genericProvider);
+    Topic? topic;
+    if (generic) {
+      final topics = ref.watch(topicListProvider);
+      final stats = ref.watch(statisticsProvider);
+      topic = await getLeastCorrectAnswerTopic(stats, topics);
+      ref.read(topicProvider.notifier).update(topic);
+    } else {
+      topic = ref.watch(topicProvider);
+    }
+    await quizNotifier.updateQuiz(topic?.questionPath);
   }
 
   _nextQuestion() async {
@@ -66,23 +97,21 @@ class _MCQState extends ConsumerState<MCQForm> {
 
   _checkAnswer(Quiz? quiz, String option) async {
     if (quiz != null) {
-      String correctOption = "18";
-      // String correctOption = correctAnswer;
-      if (correctOption == "") {
-        // final quizApi = QuizApi();
-        // final Answer response = await quizApi.fetchAnswer(quiz.answerPostPath);
-        // print(response);
-        // correctOption = response.answer;
-      }
-      if (option == correctOption) {
+      final quizApi = QuizApi();
+      bool answerIsCorrect =
+          await quizApi.fetchAnswer(quiz.answerPostPath, {"answer": option});
+
+      if (answerIsCorrect) {
+        showSnackbar(true, "Your answer is correct");
         setState(() {
           isCorrect = true;
-          correctAnswer = correctOption;
+          correctAnswer = option;
         });
         if (wrongAnswers.isEmpty) {
           _handleStatistics(true);
         }
       } else {
+        showSnackbar(false, "Your answer is incorrect");
         if (wrongAnswers.isEmpty) {
           _handleStatistics(false);
         }

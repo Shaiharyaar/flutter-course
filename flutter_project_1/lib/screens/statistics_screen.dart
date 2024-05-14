@@ -12,12 +12,13 @@ class StatisticsScreen extends StatelessWidget {
         padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.05),
         child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.9,
-            child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+            child: const SingleChildScrollView(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                   Text("Statistics", style: TextStyle(fontSize: 24)),
                   StatisticsList(),
-                ])),
+                ]))),
       ),
     );
   }

@@ -18,7 +18,7 @@ class TopicNotifier extends StateNotifier<Topic?> {
     state = Topic.fromJson(topic);
   }
 
-  updateTopic(Topic topic) {
+  update(Topic topic) {
     state = topic;
     prefs.setString(SharedKeyConstants.topic, json.encode(state!.toJson()));
   }

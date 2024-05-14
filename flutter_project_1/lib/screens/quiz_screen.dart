@@ -10,15 +10,16 @@ class QuizScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenWrapper(
       SizedBox(
-          width: MediaQuery.of(context).size.width,
-          child: const Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(height: 30),
-                TopicTitle(),
-                SizedBox(height: 20),
-                MCQForm(),
-              ])),
+        width: MediaQuery.of(context).size.width,
+        child: const SingleChildScrollView(
+          child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+            SizedBox(height: 30),
+            TopicTitle(),
+            SizedBox(height: 20),
+            MCQForm(),
+          ]),
+        ),
+      ),
     );
   }
 }

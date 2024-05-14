@@ -15,11 +15,11 @@ class QuizApi {
     return Quiz.fromJson(jsonData);
   }
 
-  Future<Answer> fetchAnswer(path) async {
-    final response = await http.get(
-      Uri.parse("$baseUrl$path"),
-    );
+  Future<bool> fetchAnswer(path, data) async {
+    final response =
+        await http.post(Uri.parse("$baseUrl$path"), body: json.encode(data));
     final Map<String, dynamic> jsonData = jsonDecode(response.body);
-    return Answer.fromJson(jsonData);
+    final Answer answer = Answer.fromJson(jsonData);
+    return answer.correct;
   }
 }

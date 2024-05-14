@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_project_1/providers/is_quiz_provider.dart';
 import 'package:flutter_project_1/providers/quiz_provider.dart';
 import 'package:flutter_project_1/util/constants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,21 +12,30 @@ class ScreenWrapper extends ConsumerWidget {
   _goToTopics(BuildContext context, WidgetRef ref) {
     final quizNotifier = ref.watch(quizNotifierProvider);
     quizNotifier.setQuiz(null);
+    ref.read(isQuizPageProvider.notifier).state = false;
+    context.go(SharedLocationConstants.topics);
+  }
 
-    context.go(SharedLocationConstants.home);
+  _goToStats(BuildContext context, WidgetRef ref) {
+    ref.read(isQuizPageProvider.notifier).state = false;
+    context.go(SharedLocationConstants.statistics);
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isQuizPage = ref.watch(isQuizPageProvider);
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-            onPressed: () => _goToTopics(context, ref),
-            icon: const Icon(Icons.arrow_back)),
         title: const Text("Quiz App"),
         actions: [
+          isQuizPage
+              ? IconButton(
+                  onPressed: () => _goToTopics(context, ref),
+                  color: Colors.purple.shade800,
+                  icon: const Icon(Icons.list_alt_rounded))
+              : const SizedBox(),
           IconButton(
-              onPressed: () => context.go(SharedLocationConstants.statistics),
+              onPressed: () => _goToStats(context, ref),
               color: Colors.purple.shade800,
               icon: const Icon(Icons.bar_chart))
         ],

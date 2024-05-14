@@ -1,5 +1,6 @@
 class Answer {
-  final String answer;
+  final bool correct;
 
-  Answer.fromJson(Map<String, dynamic> jsonData) : answer = jsonData['answer'];
+  Answer.fromJson(Map<String, dynamic> jsonData)
+      : correct = jsonData['correct'];
 }

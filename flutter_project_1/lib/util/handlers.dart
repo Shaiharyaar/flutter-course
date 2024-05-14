@@ -1,8 +1,9 @@
+import 'dart:math';
 import 'dart:convert';
 
 import 'package:flutter_project_1/models/statistics.dart';
 import 'package:flutter_project_1/models/topic.dart';
-import 'package:flutter_project_1/services/topis_api.dart';
+import 'package:flutter_project_1/services/topics_api.dart';
 import 'package:flutter_project_1/util/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -44,4 +45,27 @@ Future<List<Topic>> _setTopicsList(SharedPreferences prefs) async {
 void setSharedPreferencesValues(SharedPreferences prefs) async {
   final topicsList = await _setTopicsList(prefs);
   _setStatisticsList(prefs, topicsList);
+}
+
+Future<Topic> getLeastCorrectAnswerTopic(
+    List<Statistics> stats, List<Topic> topics) async {
+  final topicCorrectCounts = <int, int>{};
+
+  for (var stat in stats) {
+    final count = topicCorrectCounts[stat.topicId] ?? 0;
+    topicCorrectCounts[stat.topicId] = count + stat.totalCorrectAnswerCount;
+  }
+
+  final minCorrectCount = topicCorrectCounts.values.reduce(min);
+
+  final leastCorrectTopics = topicCorrectCounts.entries
+      .where((entry) => entry.value == minCorrectCount)
+      .map((entry) => topics.firstWhere((topic) => topic.id == entry.key))
+      .toList();
+
+  final random = Random();
+  final randomTopic =
+      leastCorrectTopics[random.nextInt(leastCorrectTopics.length)];
+
+  return randomTopic;
 }
