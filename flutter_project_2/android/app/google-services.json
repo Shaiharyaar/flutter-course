@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1020594764071",
+    "project_id": "flutter-yumly",
+    "storage_bucket": "flutter-yumly.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1020594764071:android:a2ba0e6267f31fed05d102",
+        "android_client_info": {
+          "package_name": "com.example.flutter_project_2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWDWY9tLBQOIu73GWh9ybko5apQ94PE_g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

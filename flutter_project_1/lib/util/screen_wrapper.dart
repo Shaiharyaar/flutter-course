@@ -26,7 +26,7 @@ class ScreenWrapper extends ConsumerWidget {
     final isQuizPage = ref.watch(isQuizPageProvider);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Quiz App"),
+        title: const Text("Quizzify"),
         actions: [
           isQuizPage
               ? IconButton(
