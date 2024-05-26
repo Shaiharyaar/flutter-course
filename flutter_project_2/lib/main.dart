@@ -13,12 +13,6 @@ main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  final FirebaseFirestore fs = FirebaseFirestore.instance;
-  final snapshot = await fs.collection('notes').get();
-  for (var doc in snapshot.docs) {
-    print('${doc.id}: ${doc.data()}');
-  }
-
   runApp(
     const ProviderScope(child: YumlyApp()),
   );

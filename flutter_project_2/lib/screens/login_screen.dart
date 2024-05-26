@@ -13,7 +13,7 @@ class LoginScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncUser = ref.watch(userProvider);
+    final asyncUser = ref.watch(asyncUserProvider);
     return Scaffold(
       body: LoadingContainer(
         child: Container(
@@ -54,6 +54,7 @@ class LoginScreen extends ConsumerWidget {
                       Future.delayed(const Duration(milliseconds: 3000), () {
                         context.go(RoutesPath.home);
                         ref.read(loadingStateProvider.notifier).stopLoader();
+                        ref.read(userProvider.notifier).fetchUser();
                       });
                     }
                   }

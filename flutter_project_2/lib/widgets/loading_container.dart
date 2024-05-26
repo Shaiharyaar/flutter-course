@@ -64,7 +64,7 @@ class _LoadingContainer extends ConsumerState<LoadingContainer>
                         }),
                   ),
                   SizedBox(width: state.text == "" ? 0 : 20),
-                  Text("state.text",
+                  Text(state.text,
                       style:
                           const TextStyle(color: Colors.white, fontSize: 18)),
                 ],

@@ -1,8 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_project_2/providers/current_index_nav_provider.dart';
 import 'package:flutter_project_2/providers/loading_provider.dart';
 import 'package:flutter_project_2/providers/user_provider.dart';
+import 'package:flutter_project_2/screens/category_screen.dart';
 import 'package:flutter_project_2/screens/home_screen.dart';
+import 'package:flutter_project_2/screens/profile_screen.dart';
 import 'package:flutter_project_2/utils/constants.dart';
 import 'package:flutter_project_2/widgets/bottom_navigation_bar.dart';
 import 'package:flutter_project_2/widgets/custom_search_delegate.dart';
@@ -15,7 +18,8 @@ class NavScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncUser = ref.watch(userProvider);
+    final asyncUser = ref.watch(asyncUserProvider);
+    final currentIndex = ref.watch(currentIndexNavProvider);
     return Scaffold(
       body: LoadingContainer(
         child: Scaffold(
@@ -42,6 +46,7 @@ class NavScreen extends ConsumerWidget {
                                 ref
                                     .read(loadingStateProvider.notifier)
                                     .stopLoader();
+                                ref.read(userProvider.notifier).fetchUser();
                               });
                             }
                           },
@@ -71,7 +76,11 @@ class NavScreen extends ConsumerWidget {
               ],
             ),
             bottomNavigationBar: const CustomBottomNavigationBar(),
-            body: const [HomeScreen(), HomeScreen(), HomeScreen()][1]),
+            body: const [
+              HomeScreen(),
+              CategoryScreen(),
+              ProfileScreen()
+            ][currentIndex]),
       ),
     );
   }
