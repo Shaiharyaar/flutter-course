@@ -1,5 +1,8 @@
 import 'package:flutter_project_2/models/recipe.dart';
 import 'package:flutter_project_2/screens/add_recipe_screen.dart';
+import 'package:flutter_project_2/screens/all_fav_recipes_screen.dart';
+import 'package:flutter_project_2/screens/all_recipes_screen.dart';
+import 'package:flutter_project_2/screens/category_recipe_screen.dart';
 import 'package:flutter_project_2/screens/edit_recipe_screen.dart';
 import 'package:flutter_project_2/screens/login_screen.dart';
 import 'package:flutter_project_2/screens/nav_screen.dart';
@@ -19,8 +22,17 @@ final router = GoRouter(
           );
         }),
     GoRoute(
+        path: RoutesPath.recipes,
+        builder: (context, state) => AllRecipesScreen()),
+    GoRoute(
+        path: RoutesPath.favRecipes,
+        builder: (context, state) => const AllFavoriteRecipesScreen()),
+    GoRoute(
         path: RoutesPath.addRecipe,
         builder: (context, state) => const AddRecipeScreen()),
+    GoRoute(
+        path: RoutesPath.categoryRecipe,
+        builder: (context, state) => const CategoryRecipeScreenState()),
     GoRoute(
         path: RoutesPath.editRecipe(':id'),
         builder: (context, state) =>

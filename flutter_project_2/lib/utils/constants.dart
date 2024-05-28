@@ -2,7 +2,10 @@ class RoutesPath {
   static const String home = "/";
   static const String login = "/login";
   static const String recipe = "/recipe";
+  static const String recipes = "/recipes";
+  static const String favRecipes = "/favorite-recipes";
   static const String addRecipe = "/add-recipe";
+  static const String categoryRecipe = "/category-recipe";
 
   static String editRecipe(String id) => "/edit-recipe/$id";
 }

@@ -10,6 +10,7 @@ class RecipeModel {
   String userId;
   String category;
   String ingredients;
+  List<dynamic> favorite;
 
   RecipeModel({
     this.id,
@@ -19,6 +20,7 @@ class RecipeModel {
     required this.userId,
     required this.category,
     required this.ingredients,
+    required this.favorite,
   });
 
   factory RecipeModel.fromFirestore(Map<String, dynamic> data, String id) {
@@ -30,6 +32,7 @@ class RecipeModel {
       userId: data["userId"],
       category: data["category"],
       ingredients: data["ingredients"],
+      favorite: data["favorite"],
     );
   }
   Map<String, dynamic> toJson() => {
@@ -40,5 +43,6 @@ class RecipeModel {
         "userId": userId,
         "category": category,
         "ingredients": ingredients,
+        "favorite": favorite,
       };
 }

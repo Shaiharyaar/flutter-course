@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+enum Status { success, info, warning, error }
+
 class Helper {
-  static void showSnackbar(BuildContext context, bool correct, String text) {
+  static void showSnackbar(BuildContext context, Status status, String text) {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
     final snackBar = SnackBar(
       dismissDirection: DismissDirection.up,
       behavior: SnackBarBehavior.floating,
@@ -18,7 +21,13 @@ class Helper {
         style: const TextStyle(color: Colors.white),
         textAlign: TextAlign.center,
       ),
-      backgroundColor: correct ? Colors.green.shade700 : Colors.red.shade700,
+      backgroundColor: status == Status.success
+          ? Colors.green.shade700
+          : status == Status.info
+              ? Colors.blue
+              : status == Status.warning
+                  ? Colors.orange
+                  : Colors.red.shade700,
       closeIconColor: Colors.white,
     );
 

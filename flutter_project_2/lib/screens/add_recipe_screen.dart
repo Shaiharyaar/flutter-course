@@ -37,9 +37,10 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
         steps: _recipeStepsController.text,
         ingredients: _recipeIngredientsController.text,
         userId: currentUser!.uid,
+        favorite: [],
         category: _recipeCategoryController.text);
     await ref.read(recipeProvider.notifier).addRecipe(recipeBody);
-    Helper.showSnackbar(ctx, true, "Recipe has been added!");
+    Helper.showSnackbar(ctx, Status.success, "Recipe has been added!");
     ctx.pop();
   }
 

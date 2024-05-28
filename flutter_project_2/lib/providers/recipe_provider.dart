@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_project_2/models/recipe.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,6 +15,7 @@ class RecipeNotifier extends StateNotifier<List<RecipeModel>> {
     final recipes = snapshot.docs.map((doc) {
       return RecipeModel.fromFirestore(doc.data(), doc.id);
     }).toList();
+    print({recipes});
 
     state = recipes;
   }
@@ -32,6 +34,34 @@ class RecipeNotifier extends StateNotifier<List<RecipeModel>> {
     await _firestore.collection('recipes').doc(data.id).update(recipeData);
     final recipe = RecipeModel.fromFirestore(recipeData, data.id!);
     state = [..._replaceRecipeById(state, recipe)];
+  }
+
+  Future<void> toggleFavorite(RecipeModel data) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return;
+    }
+    final List<String> updatedFavorites = List<String>.from(data.favorite);
+    final bool isFavorite = updatedFavorites.contains(user.uid);
+
+    if (isFavorite) {
+      updatedFavorites.remove(user.uid);
+    } else {
+      updatedFavorites.add(user.uid);
+    }
+
+    await _firestore.collection('recipes').doc(data.id).update({
+      'favorite': updatedFavorites,
+    });
+
+    final List<RecipeModel> updatedRecipes = [...state];
+    for (int i = 0; i < updatedRecipes.length; i++) {
+      if (updatedRecipes[i].id == data.id) {
+        updatedRecipes[i].favorite = updatedFavorites;
+        break;
+      }
+    }
+    state = updatedRecipes;
   }
 
   Future<void> deleteRecipe(String id) async {

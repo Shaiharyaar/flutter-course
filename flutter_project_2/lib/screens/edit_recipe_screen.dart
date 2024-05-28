@@ -32,6 +32,8 @@ class _EditRecipeScreenState extends ConsumerState<EditRecipeScreen> {
 
   _editRecipe(BuildContext ctx) async {
     final currentUser = FirebaseAuth.instance.currentUser;
+    final recipeList = ref.read(recipeProvider);
+    final RecipeModel recipeData = findRecipeById(recipeList, widget.recipeId);
     final recipeBody = RecipeModel(
         id: widget.recipeId,
         title: _recipeTitleController.text,
@@ -39,9 +41,10 @@ class _EditRecipeScreenState extends ConsumerState<EditRecipeScreen> {
         steps: _recipeStepsController.text,
         ingredients: _recipeIngredientsController.text,
         userId: currentUser!.uid,
+        favorite: recipeData.favorite,
         category: _recipeCategoryController.text);
     await ref.read(recipeProvider.notifier).updateRecipe(recipeBody);
-    Helper.showSnackbar(ctx, true, "Recipe has been updated!");
+    Helper.showSnackbar(ctx, Status.success, "Recipe has been updated!");
     ctx.pop();
   }
 
